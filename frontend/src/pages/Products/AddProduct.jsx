@@ -24,45 +24,62 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 // FORMIK
 const INITIAL_FORM_STATE = {
-  taxName: "",
-  percentage: "",
+  productName: "",
+  productCategory: "",
+  wholeSalePrice: "",
+  salePrice: "",
+  description: "",
 };
 
 //YUP validations
 const validationSchema = Yup.object({
-    taxName: Yup.string().required("Tax name is required"),
-    percentage: Yup.string()
-      .required("Percentage is required")
-      .test('is-positive', 'Percentage must be a positive number', (value) => {
-        if (value) {
-          const numericValue = parseFloat(value);
-          return !isNaN(numericValue) && numericValue >= 0;
-        }
-      }),
-});  
+    productName: Yup.string().required("Product Name is required"),
+    productCategory: Yup.string().required("Product Category is required"),
+    wholeSalePrice: Yup.string()
+        .required("Wholesale Price is required")
+        .test('is-positive', 'Wholesale Price must be a positive number', (value) => {
+            if (value) {
+              const numericValue = parseFloat(value);
+              return !isNaN(numericValue) && numericValue >= 0;
+            }
+        }),
+    salePrice: Yup.string()
+        .required("Sale Price is required")
+        .test('is-positive', 'Sale Price must be a positive number', (value) => {
+            if (value) {
+              const numericValue = parseFloat(value);
+              return !isNaN(numericValue) && numericValue >= 0;
+            }
+          }),
+    description: Yup.string().required("Description is required"),
+});
 
-const apiUrl = "http://localhost:8070/tax/addTax"; // Change to your API URL
+const apiUrl = "http://localhost:8070/products/addProduct"; // Change to your API URL
 
 //The Main function
-export default function AddTax(props) {
+export default function NewProduct(props) {
   const [notify, setNotify] = useState({
     isOpen: false,
     message: "",
     type: "",
   });
   const navigate = useNavigate();
-  const { openPopupAddTax, setOpenPopupAddTax } = props;
+  const { openPopupAddProduct, setOpenPopupAddProduct } = props;
 
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
       const dataToSend = {
-        taxName: values.taxName,
-        percentage: values.percentage,
+        productName: values.productName,
+        productCategory: values.productCategory,
+        wholeSalePrice: values.wholeSalePrice,
+        salePrice: values.salePrice,
+        stocks: "0",
+        description: values.description,
       }
 
       await axios.post(apiUrl, dataToSend);
-      sessionStorage.setItem("taxCreated", "1");
-      navigate("/settings/taxList");
+      sessionStorage.setItem("productCreated", "1");
+      navigate("/products/productsList");
     } catch (error) {
       setNotify({
         isOpen: true,
@@ -71,14 +88,14 @@ export default function AddTax(props) {
       });
     } finally {
       setSubmitting(false);
-      setOpenPopupAddTax(false);
+      setOpenPopupAddProduct(false);
     }
   };
 
   return (
     <Dialog
-      open={openPopupAddTax}
-      onBackdropClick={() => setOpenPopupAddTax(false)}
+      open={openPopupAddProduct}
+      onBackdropClick={() => setOpenPopupAddProduct(false)}
       maxWidth="md"
       TransitionComponent={Transition}
       PaperProps={{
@@ -87,9 +104,9 @@ export default function AddTax(props) {
     >
       <div className="popup">
         <DialogTitle>
-        <div className="d-flex justify-content-between align-items-center">
-          <div className="d-flex align-items-center">
-            <p className="popupTitle">Add Tax</p>
+        <div className="d-flex justify-content-between align-products-center">
+          <div className="d-flex align-products-center">
+            <p className="popupTitle">Add Product</p>
           </div>
         </div>
 
@@ -113,26 +130,42 @@ export default function AddTax(props) {
           >
             {({ isSubmitting, values }) => (
             <Form>
-              <Grid item xs={12} style={{ marginBottom: "10px", marginTop: "10px" }}>
-                <CustomTextField name="taxName" label="Tax" />
+              <Grid product xs={12} style={{ marginBottom: "10px", marginTop: "10px" }}>
+                <CustomTextField name="productName" label="Product Name" />
               </Grid>
 
-                <Grid item xs={12} style={{ marginBottom: "10px" }}>
+              <Grid product xs={12} style={{ marginBottom: "10px" }}>
+                <CustomTextField name="productCategory" label="Product Category" />
+              </Grid>
+
+              <Grid item xs={12} style={{ marginBottom: "10px" }}>
                     <CustomTextField
                         type='number'
-                        name="percentage"
-                        label="Tax Percentage(%)"
+                        name="wholeSalePrice"
+                        label="Wholesale Price"
                         inputProps={{ style: { '-moz-appearance': 'textfield' } }}
                     />
                 </Grid>
 
+              <Grid item xs={12} style={{ marginBottom: "10px" }}>
+                    <CustomTextField
+                        type='number'
+                        name="salePrice"
+                        label="Sale Price"
+                        inputProps={{ style: { '-moz-appearance': 'textfield' } }}
+                    />
+               </Grid>
+
+              <Grid product xs={12} style={{ marginBottom: "10px", marginTop: "10px" }}>
+                <CustomTextField name="description" label="Description" />
+              </Grid>
 
               <div style={{ display: "flex", justifyContent: "right", marginTop: "1rem" }}>
                 <Button
                   startIcon={<ClearIcon />}
                   style={{marginRight: "15px"}}
                   onClick={() => {
-                    setOpenPopupAddTax(false);
+                    setOpenPopupAddProduct(false);
                   }}
                   variant="outlined"
                   color="primary"

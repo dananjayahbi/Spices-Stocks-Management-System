@@ -224,6 +224,33 @@ function Dashboard() {
       });
       sessionStorage.removeItem("taxDeleted");
     }
+
+    if (sessionStorage.getItem("productCreated") == "1") {
+      setNotify({
+        isOpen: true,
+        message: "Product Added Successfully!",
+        type: "success",
+      });
+      sessionStorage.removeItem("productCreated");
+    }
+
+    if (sessionStorage.getItem("productUpdated") == "1") {
+      setNotify({
+        isOpen: true,
+        message: "Product Updated Successfully!",
+        type: "success",
+      });
+      sessionStorage.removeItem("productUpdated");
+    }
+
+    if (sessionStorage.getItem("productDeleted") == "1") {
+      setNotify({
+        isOpen: true,
+        message: "Product Deleted Successfully!",
+        type: "success",
+      });
+      sessionStorage.removeItem("productDeleted");
+    }
   });
 
 

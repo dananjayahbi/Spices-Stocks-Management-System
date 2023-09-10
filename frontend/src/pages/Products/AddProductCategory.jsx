@@ -54,7 +54,7 @@ export default function NewProductCategory(props) {
       }
 
       await axios.post(apiUrl, dataToSend);
-      sessionStorage.setProduct("productCategoryCreated", "1");
+      sessionStorage.setItem("productCategoryCreated", "1");
       navigate("/products/productCategoriesList");
     } catch (error) {
       setNotify({

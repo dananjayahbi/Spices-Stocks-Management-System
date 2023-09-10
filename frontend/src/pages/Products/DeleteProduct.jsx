@@ -24,33 +24,33 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 // FORMIK
 const INITIAL_FORM_STATE = {
-  categoryName: "",
+  productName: "",
 };
 
 //YUP validations
 const validationSchema = Yup.object({
-    categoryName: Yup.string().required("Category is required"),
+    productName: Yup.string().required("Product is required"),
 });
 
 //The Main function
-export default function DeleteProductCategory(props) {
+export default function DeleteProduct(props) {
   const [notify, setNotify] = useState({
     isOpen: false,
     message: "",
     type: "",
   });
   const navigate = useNavigate();
-  const { openPopupDeleteProductCategory, setOpenPopupDeleteProductCategory } = props;
+  const { openPopupDeleteProduct, setOpenPopupDeleteProduct } = props;
 
-  const apiUrl = `http://localhost:8070/productCategory/deleteCategory/${props.productCategID}`; // Change to your API URL
+  const apiUrl = `http://localhost:8070/products/deleteProduct/${props.productID}`; // Change to your API URL
 
 
   const handleSubmit = async (values, { setSubmitting }) => {
-    if (props.categoryName == values.categoryName) {
+    if (props.productName == values.productName) {
         try {
             await axios.delete(apiUrl, values);
-            sessionStorage.setItem("productCategoryDeleted", "1");
-            navigate("/products/productCategoriesList")
+            sessionStorage.setItem("productDeleted", "1");
+            navigate("/products/productsList")
         } catch (error) {
         setNotify({
             isOpen: true,
@@ -59,12 +59,12 @@ export default function DeleteProductCategory(props) {
         });
         } finally {
         setSubmitting(false);
-        setOpenPopupDeleteProductCategory(false);
+        setOpenPopupDeleteProduct(false);
         }
     } else {
         setNotify({
             isOpen: true,
-            message: "Category is not matching!",
+            message: "Product is not matching!",
             type: "error",
         });
     }
@@ -72,8 +72,8 @@ export default function DeleteProductCategory(props) {
 
   return (
     <Dialog
-      open={openPopupDeleteProductCategory}
-      onBackdropClick={() => setOpenPopupDeleteProductCategory(false)}
+      open={openPopupDeleteProduct}
+      onBackdropClick={() => setOpenPopupDeleteProduct(false)}
       maxWidth="sm"
       TransitionComponent={Transition}
       PaperProps={{
@@ -84,7 +84,7 @@ export default function DeleteProductCategory(props) {
         <DialogTitle>
         <div className="d-flex justify-content-between align-products-center">
           <div className="d-flex align-products-center">
-            <p className="popupTitle">Delete Category</p>
+            <p className="popupTitle">Delete Product</p>
           </div>
         </div>
 
@@ -109,7 +109,7 @@ export default function DeleteProductCategory(props) {
             {({ isSubmitting }) => (
             <Form>
               <Grid product xs={12} style={{ marginBottom: "10px", marginTop: "10px" }}>
-                <CustomTextField name="categoryName" label="Type category to confirm delete ..." />
+                <CustomTextField name="productName" label="Type product to confirm delete ..." />
               </Grid>
 
 
@@ -118,7 +118,7 @@ export default function DeleteProductCategory(props) {
                   startIcon={<ClearIcon />}
                   style={{marginRight: "15px"}}
                   onClick={() => {
-                    setOpenPopupDeleteProductCategory(false);
+                    setOpenPopupDeleteProduct(false);
                   }}
                   variant="outlined"
                   color="primary"
